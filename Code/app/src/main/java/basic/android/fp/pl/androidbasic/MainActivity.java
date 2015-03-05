@@ -14,8 +14,6 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends Activity implements RateChangeDialog.OnCurrencyChangedListener {
 
-	private Button changeCurrencyButton;
-	private Button button2;
 	private TextView currentCurrency;
 	private Rate currentRate;
 
@@ -26,8 +24,8 @@ public class MainActivity extends Activity implements RateChangeDialog.OnCurrenc
 		ButterKnife.inject(this);
 
 		currentCurrency = (TextView) findViewById(R.id.currentCurrency);
-		changeCurrencyButton = (Button) findViewById(R.id.listCurrenciesButton);
-		button2 = (Button) findViewById(R.id.rateChangeButton);
+		Button changeCurrencyButton = (Button) findViewById(R.id.listCurrenciesButton);
+		Button button2 = (Button) findViewById(R.id.rateChangeButton);
 
 		changeCurrencyButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -41,7 +39,7 @@ public class MainActivity extends Activity implements RateChangeDialog.OnCurrenc
 		button2.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				new RateChangeDialog(MainActivity.this, MainActivity.this, currency).show();
+				new RateChangeDialog(MainActivity.this, MainActivity.this, currentRate).show();
 			}
 		});
 	}

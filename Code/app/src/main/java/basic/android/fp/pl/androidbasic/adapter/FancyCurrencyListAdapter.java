@@ -1,11 +1,6 @@
 package basic.android.fp.pl.androidbasic.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,12 +23,10 @@ import basic.android.fp.pl.androidbasic.util.FlagAddress;
 public class FancyCurrencyListAdapter extends BaseAdapter {
 
 	private Context context;
-	private Currency baseCurrency;
 	private List<Rate> rates;
 
 	public FancyCurrencyListAdapter(Context context, RatesList currencyTable) {
 		this.context = context;
-		baseCurrency = currencyTable.getBase();
 		rates = new ArrayList<Rate>(currencyTable.getRates().size());
 		for (Map.Entry<String, Double> entry : currencyTable.getRates().entrySet()) {
 			rates.add(new Rate(Currency.valueOf(entry.getKey()), entry.getValue()));
@@ -71,52 +62,9 @@ public class FancyCurrencyListAdapter extends BaseAdapter {
 		}
 		Rate rate = getItem(position);
 		holder.populate(rate);
-		new LoadCurrencyImage(holder.flag).execute(FlagAddress.obtainAddress(rate.getCurrency()));
 		return convertView;
 	}
 
-	private static class LoadCurrencyImage extends AsyncTask<String, Void, Drawable> {
-
-		private ImageView flag;
-
-		private LoadCurrencyImage(ImageView flag) {
-			this.flag = flag;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			flag.setImageResource(R.drawable.money);
-		}
-
-		@Override
-		protected Drawable doInBackground(String... params) {
-			return drawableFromUrl(params[0]);
-		}
-
-		@Override
-		protected void onPostExecute(Drawable drawable) {
-			super.onPostExecute(drawable);
-			if (drawable.getIntrinsicHeight() != -1 && drawable.getIntrinsicWidth() != -1) {
-				flag.setImageDrawable(drawable);
-			}
-		}
-
-		private Drawable drawableFromUrl(String url) {
-			Bitmap x;
-			InputStream input = null;
-			try {
-				HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-				connection.connect();
-				input = connection.getInputStream();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			x = BitmapFactory.decodeStream(input);
-			return new BitmapDrawable(x);
-		}
-	}
 	private class ViewHolder {
 
 		protected final TextView currencyName;
@@ -132,6 +80,7 @@ public class FancyCurrencyListAdapter extends BaseAdapter {
 		protected void populate(Rate rate) {
 			currencyName.setText(rate.getCurrency().getCountry() + " " + rate.getCurrency().getCurrencyName());
 			averageRate.setText(rate.getRate().toString());
+			Picasso.with(context).load(FlagAddress.obtainAddress(rate.getCurrency())).placeholder(R.drawable.money).into(flag);
 		}
 	}
 }
