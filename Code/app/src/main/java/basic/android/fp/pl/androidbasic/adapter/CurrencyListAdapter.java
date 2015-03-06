@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import basic.android.fp.pl.androidbasic.R;
@@ -22,8 +21,8 @@ import butterknife.InjectView;
 
 public class CurrencyListAdapter extends BaseAdapter {
 
-	private Context context;
-	private List<ExchangeRate> exchangeRates = new ArrayList<ExchangeRate>();
+	private final Context context;
+	private final List<ExchangeRate> exchangeRates;
 	private final LayoutInflater inflater;
 
 	public CurrencyListAdapter(Context context, RatesList ratesList) {
