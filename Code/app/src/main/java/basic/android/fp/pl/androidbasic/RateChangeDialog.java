@@ -10,28 +10,28 @@ import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 
-import basic.android.fp.pl.androidbasic.model.Rate;
+import basic.android.fp.pl.androidbasic.model.ExchangeRate;
 
 public class RateChangeDialog {
 
 	public interface OnCurrencyChangedListener {
 
-		void onRateChanged(Rate currency);
+		void onRateChanged(ExchangeRate currency);
 	}
 
 	private Context context;
 	private AlertDialog dialog;
-	private Rate currencyRate;
+	private ExchangeRate currencyExchangeRate;
 
 	private EditText inputEditText;
 	private Button positiveButton;
 
 	private OnCurrencyChangedListener listener;
 
-	public RateChangeDialog(Context context, OnCurrencyChangedListener listener, Rate currencyRate) {
+	public RateChangeDialog(Context context, OnCurrencyChangedListener listener, ExchangeRate currencyExchangeRate) {
 		this.context = context;
 		this.listener = listener;
-		this.currencyRate = currencyRate;
+		this.currencyExchangeRate = currencyExchangeRate;
 	}
 
 	public void show() {
@@ -71,7 +71,7 @@ public class RateChangeDialog {
 	}
 
 	private void setTextInInputEditText() {
-		inputEditText.setText(String.valueOf(currencyRate.getRate()));
+		inputEditText.setText(String.valueOf(currencyExchangeRate.getRate()));
 	}
 
 	private class PositiveOnClickListener implements DialogInterface.OnClickListener {
@@ -86,8 +86,8 @@ public class RateChangeDialog {
 		CharSequence inputText = inputEditText.getText();
 
 		double rate = Double.parseDouble(inputText.toString());
-		currencyRate.setRate(rate);
-		listener.onRateChanged(currencyRate);
+		currencyExchangeRate.setRate(rate);
+		listener.onRateChanged(currencyExchangeRate);
 	}
 
 	private class EmptyInputValidator implements TextWatcher {

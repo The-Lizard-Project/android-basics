@@ -12,35 +12,30 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import basic.android.fp.pl.androidbasic.R;
-import basic.android.fp.pl.androidbasic.model.Rate;
+import basic.android.fp.pl.androidbasic.model.ExchangeRate;
 import basic.android.fp.pl.androidbasic.model.RatesList;
-import basic.android.fp.pl.androidbasic.util.Currency;
 import basic.android.fp.pl.androidbasic.util.FlagAddress;
 
 public class FancyCurrencyListAdapter extends BaseAdapter {
 
 	private Context context;
-	private List<Rate> rates;
+	private List<ExchangeRate> exchangeRates = new ArrayList<ExchangeRate>();
 
 	public FancyCurrencyListAdapter(Context context, RatesList currencyTable) {
 		this.context = context;
-		rates = new ArrayList<Rate>(currencyTable.getRates().size());
-		for (Map.Entry<String, Double> entry : currencyTable.getRates().entrySet()) {
-			rates.add(new Rate(Currency.valueOf(entry.getKey()), entry.getValue()));
-		}
+		exchangeRates = currencyTable.getExchangeRates();
 	}
 
 	@Override
 	public int getCount() {
-		return rates.size();
+		return exchangeRates.size();
 	}
 
 	@Override
-	public Rate getItem(int position) {
-		return rates.get(position);
+	public ExchangeRate getItem(int position) {
+		return exchangeRates.get(position);
 	}
 
 	@Override
@@ -60,8 +55,8 @@ public class FancyCurrencyListAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		Rate rate = getItem(position);
-		holder.populate(rate);
+		ExchangeRate exchangeRate = getItem(position);
+		holder.populate(exchangeRate);
 		return convertView;
 	}
 
@@ -77,10 +72,10 @@ public class FancyCurrencyListAdapter extends BaseAdapter {
 			flag = (ImageView) view.findViewById(R.id.flag);
 		}
 
-		protected void populate(Rate rate) {
-			currencyName.setText(rate.getCurrency().getCountry() + " " + rate.getCurrency().getCurrencyName());
-			averageRate.setText(rate.getRate().toString());
-			Picasso.with(context).load(FlagAddress.obtainAddress(rate.getCurrency())).placeholder(R.drawable.money).into(flag);
+		protected void populate(ExchangeRate exchangeRate) {
+			currencyName.setText(exchangeRate.getCurrency().getCountry() + " " + exchangeRate.getCurrency().getCurrencyName());
+			averageRate.setText(exchangeRate.getRate().toString());
+			Picasso.with(context).load(FlagAddress.obtainAddress(exchangeRate.getCurrency())).placeholder(R.drawable.money).into(flag);
 		}
 	}
 }

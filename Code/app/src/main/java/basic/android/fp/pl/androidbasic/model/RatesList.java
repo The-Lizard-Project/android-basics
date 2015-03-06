@@ -1,6 +1,6 @@
 package basic.android.fp.pl.androidbasic.model;
 
-import java.util.Map;
+import java.util.List;
 
 import basic.android.fp.pl.androidbasic.util.Currency;
 
@@ -8,12 +8,12 @@ public class RatesList {
 
 	private String date;
 	private Currency base;
-	private Map<String, Double> rates;
+	private List<ExchangeRate> rates;
 
-	public RatesList(String date, Currency base, Map<String, Double> rates) {
+	public RatesList(String date, Currency base, List<ExchangeRate> exchangeRates) {
 		this.date = date;
 		this.base = base;
-		this.rates = rates;
+		this.rates = exchangeRates;
 	}
 
 	public String getDate() {
@@ -32,11 +32,11 @@ public class RatesList {
 		this.base = base;
 	}
 
-	public Map<String, Double> getRates() {
+	public List<ExchangeRate> getExchangeRates() {
 		return rates;
 	}
 
-	public void setRates(Map<String, Double> rates) {
-		this.rates = rates;
+	public void setExchangeRates(List<ExchangeRate> exchangeRates) {
+		this.rates = exchangeRates;
 	}
 }

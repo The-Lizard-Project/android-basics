@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import basic.android.fp.pl.androidbasic.model.Rate;
+import basic.android.fp.pl.androidbasic.model.ExchangeRate;
 
 public class SharedPreferencesSupporter {
 
@@ -12,18 +12,18 @@ public class SharedPreferencesSupporter {
 	private static final String NAME = ".name";
 	private static final String AVERAGE_RATE = ".averageRate";
 
-	public static Rate loadCurrentRate(Context context) {
+	public static ExchangeRate loadCurrentRate(Context context) {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		double averageRate = preferences.getFloat(CURRENCY_MAIN_KEY + AVERAGE_RATE, 1f);
 		String name = preferences.getString(CURRENCY_MAIN_KEY + NAME, Currency.PLN.toString());
-		return new Rate(Currency.valueOf(name), averageRate);
+		return new ExchangeRate(Currency.valueOf(name), averageRate);
 	}
 
-	public static void saveCurrentRate(Rate rate, Context context) {
+	public static void saveCurrentRate(ExchangeRate exchangeRate, Context context) {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = preferences.edit();
-		editor.putFloat(CURRENCY_MAIN_KEY + AVERAGE_RATE, (float) rate.getRate().doubleValue());
-		editor.putString(CURRENCY_MAIN_KEY + NAME, rate.getCurrency().toString());
+		editor.putFloat(CURRENCY_MAIN_KEY + AVERAGE_RATE, (float) exchangeRate.getRate().doubleValue());
+		editor.putString(CURRENCY_MAIN_KEY + NAME, exchangeRate.getCurrency().toString());
 		editor.apply();
 	}
 }

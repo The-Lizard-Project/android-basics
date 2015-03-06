@@ -16,7 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import basic.android.fp.pl.androidbasic.adapter.FancyCurrencyListAdapter;
-import basic.android.fp.pl.androidbasic.model.Rate;
+import basic.android.fp.pl.androidbasic.model.ExchangeRate;
 import basic.android.fp.pl.androidbasic.model.RatesList;
 import basic.android.fp.pl.androidbasic.network.adapter.CurrencyTypeAdapter;
 import basic.android.fp.pl.androidbasic.network.api.JsonRatesService;
@@ -57,15 +57,17 @@ public class ListCurrenciesActivity extends Activity {
 
 		service = restAdapter.create(JsonRatesService.class);
 
-		new MyTask(this).execute(baseCurrency);
+		loadData();
 	}
 
 	@OnItemClick(R.id.list)
 	void onListItemClick(AdapterView<?> parent, int position) {
 		FancyCurrencyListAdapter currencyAdapter = (FancyCurrencyListAdapter) parent.getAdapter();
-		Rate rate = currencyAdapter.getItem(position);
-		SharedPreferencesSupporter.saveCurrentRate(rate, ListCurrenciesActivity.this);
+		ExchangeRate exchangeRate = currencyAdapter.getItem(position);
+		baseCurrency = exchangeRate.getCurrency();
+		SharedPreferencesSupporter.saveCurrentRate(exchangeRate, ListCurrenciesActivity.this);
 		Toast.makeText(this, "Currency saved to SharedPreferences", Toast.LENGTH_SHORT).show();
+		loadData();
 	}
 
 	@Override
@@ -78,10 +80,14 @@ public class ListCurrenciesActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_refresh || id == R.id.menu_refresh) {
-			new MyTask(this).execute(baseCurrency);
+			loadData();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private AsyncTask<Currency, Void, RatesList> loadData() {
+		return new MyTask(this).execute(baseCurrency);
 	}
 
 	private class MyTask extends AsyncTask<Currency, Void, RatesList> {
