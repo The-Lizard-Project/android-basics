@@ -7,12 +7,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import basic.android.fp.pl.androidbasic.dialog.RateChangeDialogFragment;
 import basic.android.fp.pl.androidbasic.model.Rate;
 import basic.android.fp.pl.androidbasic.util.Currency;
 import basic.android.fp.pl.androidbasic.util.SharedPreferencesSupporter;
 import butterknife.ButterKnife;
 
-public class MainActivity extends Activity implements RateChangeDialog.OnCurrencyChangedListener {
+public class MainActivity extends Activity implements RateChangeDialogFragment.OnCurrencyChangedListener {
 
 	private TextView currentCurrency;
 	private Rate currentRate;
@@ -39,7 +40,7 @@ public class MainActivity extends Activity implements RateChangeDialog.OnCurrenc
 		button2.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				new RateChangeDialog(MainActivity.this, MainActivity.this, currentRate).show();
+				RateChangeDialogFragment.getInstance(currentRate).show(getFragmentManager(), "tag");
 			}
 		});
 	}

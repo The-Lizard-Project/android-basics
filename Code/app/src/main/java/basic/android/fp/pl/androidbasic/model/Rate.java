@@ -1,8 +1,10 @@
 package basic.android.fp.pl.androidbasic.model;
 
+import java.io.Serializable;
+
 import basic.android.fp.pl.androidbasic.util.Currency;
 
-public class Rate {
+public class Rate implements Serializable {
 
 	private final Currency currency;
 	private Double rate;
