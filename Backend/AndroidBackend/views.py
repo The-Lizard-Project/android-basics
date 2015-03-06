@@ -20,7 +20,7 @@ def list_of_exchange_rates(request, iso_code):
     except Exception as detail:
         data = {
             "date": "2015-03-05",
-            "base": "PLN",
+            "base": iso_code,
             "rates": [{
                           "currency": "USD",
                           "rate": 0.2674
@@ -116,6 +116,6 @@ def list_of_exchange_rates(request, iso_code):
                           "rate": 3.1443
                       }
             ],
-            "error": detail}
+            "error": "Something went wrong, You got a predefined exchange rates"}
 
     return HttpResponse(json.dumps(data), content_type="application/json")
