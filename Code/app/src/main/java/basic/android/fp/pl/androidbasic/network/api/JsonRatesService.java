@@ -7,9 +7,6 @@ import retrofit.http.Query;
 
 public interface JsonRatesService {
 
-	@GET("/latest?base=USD")
-	RatesList getCurrencyTable();
-
 	@GET("/latest")
 	RatesList getCurrencyTable(@Query("base") Currency currency);
 }
