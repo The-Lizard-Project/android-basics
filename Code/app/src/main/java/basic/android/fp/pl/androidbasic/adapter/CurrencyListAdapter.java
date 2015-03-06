@@ -17,15 +17,19 @@ import basic.android.fp.pl.androidbasic.R;
 import basic.android.fp.pl.androidbasic.model.ExchangeRate;
 import basic.android.fp.pl.androidbasic.model.RatesList;
 import basic.android.fp.pl.androidbasic.util.FlagAddress;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
-public class FancyCurrencyListAdapter extends BaseAdapter {
+public class CurrencyListAdapter extends BaseAdapter {
 
 	private Context context;
 	private List<ExchangeRate> exchangeRates = new ArrayList<ExchangeRate>();
+	private final LayoutInflater inflater;
 
-	public FancyCurrencyListAdapter(Context context, RatesList currencyTable) {
+	public CurrencyListAdapter(Context context, RatesList ratesList) {
 		this.context = context;
-		exchangeRates = currencyTable.getExchangeRates();
+		exchangeRates = ratesList.getExchangeRates();
+		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
@@ -45,31 +49,32 @@ public class FancyCurrencyListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ViewHolder holder;
-
+		ViewHolder vh;
 		if (convertView == null) {
-			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = inflater.inflate(R.layout.item_currency_list, parent, false);
-			holder = new ViewHolder(convertView);
-			convertView.setTag(holder);
+			vh = new ViewHolder(convertView);
+			convertView.setTag(vh);
 		} else {
-			holder = (ViewHolder) convertView.getTag();
+			vh = (ViewHolder) convertView.getTag();
 		}
+
 		ExchangeRate exchangeRate = getItem(position);
-		holder.populate(exchangeRate);
+		vh.populate(exchangeRate);
+
 		return convertView;
 	}
 
-	private class ViewHolder {
+	protected class ViewHolder {
 
-		protected final TextView currencyName;
-		protected final TextView averageRate;
-		protected final ImageView flag;
+		@InjectView(R.id.currencyName)
+		protected TextView currencyName;
+		@InjectView(R.id.averageRate)
+		protected TextView averageRate;
+		@InjectView(R.id.flag)
+		protected ImageView flag;
 
-		protected ViewHolder(View view) {
-			currencyName = (TextView) view.findViewById(R.id.currencyName);
-			averageRate = (TextView) view.findViewById(R.id.averageRate);
-			flag = (ImageView) view.findViewById(R.id.flag);
+		protected ViewHolder(View rootView) {
+			ButterKnife.inject(this, rootView);
 		}
 
 		protected void populate(ExchangeRate exchangeRate) {

@@ -11,7 +11,6 @@ import basic.android.fp.pl.androidbasic.dialog.RateChangeDialogFragment;
 import basic.android.fp.pl.androidbasic.model.ExchangeRate;
 import basic.android.fp.pl.androidbasic.util.Currency;
 import basic.android.fp.pl.androidbasic.util.SharedPreferencesSupporter;
-import butterknife.ButterKnife;
 
 public class MainActivity extends Activity implements RateChangeDialogFragment.OnCurrencyChangedListener {
 
@@ -22,7 +21,6 @@ public class MainActivity extends Activity implements RateChangeDialogFragment.O
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		ButterKnife.inject(this);
 
 		currentCurrency = (TextView) findViewById(R.id.currentCurrency);
 		Button changeCurrencyButton = (Button) findViewById(R.id.listCurrenciesButton);
@@ -32,7 +30,6 @@ public class MainActivity extends Activity implements RateChangeDialogFragment.O
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(getApplicationContext(), ListCurrenciesActivity.class);
-				i.putExtra(ListCurrenciesActivity.BASE_CURRENCY, currentExchangeRate.getCurrency());
 				startActivity(i);
 			}
 		});

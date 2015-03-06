@@ -15,7 +15,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import basic.android.fp.pl.androidbasic.adapter.FancyCurrencyListAdapter;
+import basic.android.fp.pl.androidbasic.adapter.CurrencyListAdapter;
 import basic.android.fp.pl.androidbasic.model.ExchangeRate;
 import basic.android.fp.pl.androidbasic.model.RatesList;
 import basic.android.fp.pl.androidbasic.network.adapter.CurrencyTypeAdapter;
@@ -30,20 +30,15 @@ import retrofit.converter.GsonConverter;
 
 public class ListCurrenciesActivity extends Activity {
 
-	public static final String BASE_CURRENCY = ListCurrenciesActivity.class.getCanonicalName().concat("_BASE_CURRENCY");
 	@InjectView(R.id.list)
 	protected ListView currencyListView;
 	private JsonRatesService service;
-	private Currency baseCurrency;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_change_currency);
 		ButterKnife.inject(this);
-
-		String currencyCode = getIntent().getStringExtra(BASE_CURRENCY);
-		baseCurrency = Currency.valueOf(currencyCode == null ? "PLN" : currencyCode);
 
 		Gson gson = new GsonBuilder().
 				setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).
@@ -62,9 +57,8 @@ public class ListCurrenciesActivity extends Activity {
 
 	@OnItemClick(R.id.list)
 	void onListItemClick(AdapterView<?> parent, int position) {
-		FancyCurrencyListAdapter currencyAdapter = (FancyCurrencyListAdapter) parent.getAdapter();
+		CurrencyListAdapter currencyAdapter = (CurrencyListAdapter) parent.getAdapter();
 		ExchangeRate exchangeRate = currencyAdapter.getItem(position);
-		baseCurrency = exchangeRate.getCurrency();
 		SharedPreferencesSupporter.saveCurrentRate(exchangeRate, ListCurrenciesActivity.this);
 		Toast.makeText(this, "Currency saved to SharedPreferences", Toast.LENGTH_SHORT).show();
 		loadData();
@@ -86,15 +80,15 @@ public class ListCurrenciesActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private AsyncTask<Currency, Void, RatesList> loadData() {
-		return new MyTask(this).execute(baseCurrency);
+	private void loadData() {
+		new GetCurrencyTableTask(this).execute();
 	}
 
-	private class MyTask extends AsyncTask<Currency, Void, RatesList> {
+	private class GetCurrencyTableTask extends AsyncTask<Void, Void, RatesList> {
 
 		private final ProgressDialog dialog;
 
-		public MyTask(Context context) {
+		public GetCurrencyTableTask(Context context) {
 			dialog = new ProgressDialog(context);
 			dialog.setMessage(getString(R.string.please_wait));
 		}
@@ -106,15 +100,15 @@ public class ListCurrenciesActivity extends Activity {
 		}
 
 		@Override
-		protected RatesList doInBackground(Currency... params) {
-			return service.getCurrencyTable(params[0]);
+		protected RatesList doInBackground(Void... param) {
+			return service.getCurrencyTable();
 		}
 
 		@Override
 		protected void onPostExecute(RatesList currencies) {
 			super.onPostExecute(currencies);
 			dialog.dismiss();
-			currencyListView.setAdapter(new FancyCurrencyListAdapter(ListCurrenciesActivity.this, currencies));
+			currencyListView.setAdapter(new CurrencyListAdapter(ListCurrenciesActivity.this, currencies));
 		}
 	}
 }
