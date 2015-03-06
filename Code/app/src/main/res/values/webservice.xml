@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="webservice_url">http://api.fixer.io</string>
+	<string name="webservice_url">http://192.168.0.11:8086</string>
 </resources>

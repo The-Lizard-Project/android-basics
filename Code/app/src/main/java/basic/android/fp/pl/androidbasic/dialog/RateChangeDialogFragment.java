@@ -16,19 +16,19 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import basic.android.fp.pl.androidbasic.R;
-import basic.android.fp.pl.androidbasic.model.Rate;
+import basic.android.fp.pl.androidbasic.model.ExchangeRate;
 
 public class RateChangeDialogFragment extends DialogFragment {
 
 	private static final String CURRENCY_BUNDLE_KEY = "CURRENCY_BUNDLE_KEY";
 
 	private OnCurrencyChangedListener onCurrencyChangedListener;
-	private Rate currencyRate;
+	private ExchangeRate currencyRate;
 
 	private EditText inputEditText;
 	private Button positiveButton;
 
-	public static RateChangeDialogFragment getInstance(Rate rate) {
+	public static RateChangeDialogFragment getInstance(ExchangeRate rate) {
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(CURRENCY_BUNDLE_KEY, rate);
 
@@ -50,7 +50,7 @@ public class RateChangeDialogFragment extends DialogFragment {
 			throw new ClassCastException(activity.toString() + " must implement OnCurrencyChangedListener");
 		}
 
-		currencyRate = (Rate) getArguments().getSerializable(CURRENCY_BUNDLE_KEY);
+		currencyRate = (ExchangeRate) getArguments().getSerializable(CURRENCY_BUNDLE_KEY);
 	}
 
 	@Override
@@ -146,6 +146,6 @@ public class RateChangeDialogFragment extends DialogFragment {
 
 	public interface OnCurrencyChangedListener {
 
-		void onRateChanged(Rate currency);
+		void onRateChanged(ExchangeRate currency);
 	}
 }

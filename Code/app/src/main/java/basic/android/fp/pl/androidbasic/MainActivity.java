@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import basic.android.fp.pl.androidbasic.dialog.RateChangeDialogFragment;
-import basic.android.fp.pl.androidbasic.model.Rate;
+import basic.android.fp.pl.androidbasic.model.ExchangeRate;
 import basic.android.fp.pl.androidbasic.util.Currency;
 import basic.android.fp.pl.androidbasic.util.SharedPreferencesSupporter;
 import butterknife.ButterKnife;
@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends Activity implements RateChangeDialogFragment.OnCurrencyChangedListener {
 
 	private TextView currentCurrency;
-	private Rate currentRate;
+	private ExchangeRate currentExchangeRate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class MainActivity extends Activity implements RateChangeDialogFragment.O
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(getApplicationContext(), ListCurrenciesActivity.class);
-				i.putExtra(ListCurrenciesActivity.BASE_CURRENCY, currentRate.getCurrency());
+				i.putExtra(ListCurrenciesActivity.BASE_CURRENCY, currentExchangeRate.getCurrency());
 				startActivity(i);
 			}
 		});
@@ -40,7 +40,7 @@ public class MainActivity extends Activity implements RateChangeDialogFragment.O
 		button2.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				RateChangeDialogFragment.getInstance(currentRate).show(getFragmentManager(), "tag");
+				RateChangeDialogFragment.getInstance(currentExchangeRate).show(getFragmentManager(), "tag");
 			}
 		});
 	}
@@ -48,16 +48,16 @@ public class MainActivity extends Activity implements RateChangeDialogFragment.O
 	@Override
 	protected void onResume() {
 		super.onResume();
-		currentRate = SharedPreferencesSupporter.loadCurrentRate(this);
-		final Currency currency = currentRate.getCurrency();
-		currentCurrency.setText("Twoja waluta to: " + currency.getCountry() + " " + currency.getCurrencyName() + "\nKurs: " + currentRate.getRate());
+		currentExchangeRate = SharedPreferencesSupporter.loadCurrentRate(this);
+		final Currency currency = currentExchangeRate.getCurrency();
+		currentCurrency.setText("Twoja waluta to: " + currency.getCountry() + " " + currency.getCurrencyName() + "\nKurs: " + currentExchangeRate.getRate());
 	}
 
 	@Override
-	public void onRateChanged(Rate rate) {
-		currentRate = rate;
-		final Currency currency = rate.getCurrency();
-		currentCurrency.setText("Twoja waluta to: " + currency.getCountry() + " " + currency.getCurrencyName() + "\nKurs: " + rate.getRate());
-		SharedPreferencesSupporter.saveCurrentRate(rate, this);
+	public void onRateChanged(ExchangeRate exchangeRate) {
+		currentExchangeRate = exchangeRate;
+		final Currency currency = exchangeRate.getCurrency();
+		currentCurrency.setText("Twoja waluta to: " + currency.getCountry() + " " + currency.getCurrencyName() + "\nKurs: " + exchangeRate.getRate());
+		SharedPreferencesSupporter.saveCurrentRate(exchangeRate, this);
 	}
 }

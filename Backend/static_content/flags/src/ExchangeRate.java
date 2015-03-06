@@ -4,12 +4,12 @@ import java.io.Serializable;
 
 import basic.android.fp.pl.androidbasic.util.Currency;
 
-public class Rate implements Serializable {
+public class ExchangeRate implements Serializable{
 
 	private final Currency currency;
 	private Double rate;
 
-	public Rate(Currency currency, Double rate) {
+	public ExchangeRate(Currency currency, Double rate) {
 		this.currency = currency;
 		this.rate = rate;
 	}
