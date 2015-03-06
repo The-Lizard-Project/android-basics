@@ -26,7 +26,7 @@ public class MainActivity extends Activity implements RateChangeDialogFragment.O
 
 		currentCurrency = (TextView) findViewById(R.id.currentCurrency);
 		Button changeCurrencyButton = (Button) findViewById(R.id.listCurrenciesButton);
-		Button button2 = (Button) findViewById(R.id.rateChangeButton);
+		Button changeCurrencyDialogButton = (Button) findViewById(R.id.rateChangeButton);
 
 		changeCurrencyButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -37,7 +37,7 @@ public class MainActivity extends Activity implements RateChangeDialogFragment.O
 			}
 		});
 
-		button2.setOnClickListener(new View.OnClickListener() {
+		changeCurrencyDialogButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				RateChangeDialogFragment.getInstance(currentExchangeRate).show(getFragmentManager(), "tag");
