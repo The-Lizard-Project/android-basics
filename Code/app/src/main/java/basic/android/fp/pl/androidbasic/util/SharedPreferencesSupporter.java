@@ -14,7 +14,7 @@ public class SharedPreferencesSupporter {
 
 	public static ExchangeRate loadCurrentRate(Context context) {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		double averageRate = preferences.getFloat(CURRENCY_MAIN_KEY + AVERAGE_RATE, 1f);
+		float averageRate = preferences.getFloat(CURRENCY_MAIN_KEY + AVERAGE_RATE, 1f);
 		String name = preferences.getString(CURRENCY_MAIN_KEY + NAME, Currency.PLN.toString());
 		return new ExchangeRate(Currency.valueOf(name), averageRate);
 	}
@@ -22,7 +22,7 @@ public class SharedPreferencesSupporter {
 	public static void saveCurrentRate(ExchangeRate exchangeRate, Context context) {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = preferences.edit();
-		editor.putFloat(CURRENCY_MAIN_KEY + AVERAGE_RATE, (float) exchangeRate.getRate().doubleValue());
+		editor.putFloat(CURRENCY_MAIN_KEY + AVERAGE_RATE, exchangeRate.getRate());
 		editor.putString(CURRENCY_MAIN_KEY + NAME, exchangeRate.getCurrency().toString());
 		editor.apply();
 	}

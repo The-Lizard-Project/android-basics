@@ -10,5 +10,6 @@
 	<string name="please_wait">Proszę czekać</string>
 	<string name="change_rate_manually">Zmien kurs ręcznie</string>
 	<string name="open_exchange_rates_list">Otwórz listę kursów</string>
+	<string name="invalid">Nieprawidłowa liczba</string>
 
 </resources>
