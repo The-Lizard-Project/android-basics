@@ -1,0 +1,44 @@
+MainActivity:
+
+import android.os.Bundle;
+import android.widget.Button;
+
+public class MainActivity extends Activity {
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+
+	     Button changeCurrencyButton = (Button) findViewById(R.id.listCurrenciesButton);
+		 Button changeCurrencyDialogButton = (Button) findViewById(R.id.rateChangeButton);	}
+}
+
+
+Activity_main.xml:
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  android:orientation="vertical"
+			  android:gravity="center">
+
+	<Button
+		android:id="@+id/listCurrenciesButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/open_exchange_rates_list" />
+
+	<Button
+		android:id="@+id/rateChangeButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/change_rate_manually" />
+
+</LinearLayout>
+
+
+Do pliku strings.xml należy dodać dwa teksty:
+
+<string name="change_rate_manually">Zmien kurs ręcznie</string>
+<string name="open_exchange_rates_list">Otwórz listę kursów</string>

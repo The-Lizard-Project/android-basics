@@ -1,0 +1,86 @@
+Tworzymy API które definiuje punkty dostępu do serwisu.
+
+public interface JsonRatesService {
+
+	@GET("/list/USD")
+	RatesList getCurrencyTable();
+}
+
+
+W ListCurrenciesActivity w metodzie onCreate() konfigurujemy adapter serwisu.
+
+Gson gson = new GsonBuilder().
+setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).
+	registerTypeAdapter(Currency.class, new CurrencyTypeAdapter()).
+	create();
+
+RestAdapter restAdapter = new RestAdapter.Builder().
+	setEndpoint(getString(R.string.webservice_url)).
+	setConverter(new GsonConverter(gson)).
+	build();
+
+service = restAdapter.create(JsonRatesService.class);
+
+
+Używamy biblioteki GSON do parsowania JSON.
+Dodajemy klasę adaptera dla GSON’a wspomagającą parsowanie:
+
+public class CurrencyTypeAdapter extends TypeAdapter<Currency> {
+	@Override
+	public void write(JsonWriter out, Currency value) throws IOException {
+		if (value == null) {
+			out.nullValue();
+			return;
+		}
+		out.value(value.toString());
+	}
+
+	@Override
+	public Currency read(JsonReader in) throws IOException {
+		if (in.peek() == JsonToken.NULL) {
+			in.nextNull();
+			return null;
+		}
+		return Currency.valueOf(in.nextString());
+	}
+}
+
+
+Pobieranie z internet wywoływane musi być na osobnym wątku, inaczej rzucony zostanie NetworkOnMainThreadException. Dlatego oddelegujemy wywołanie operacji sieciowej do osobnego wątku. Zdefiniujemy wewnętrzną klasę rozszerzającą AsyncTask.
+
+private class GetCurrencyTableTask extends AsyncTask<Currency, Void, RatesList> {
+
+	private final ProgressDialog dialog;
+
+	public GetCurrencyTableTask(Context context) {
+		dialog = new ProgressDialog(context);
+		dialog.setMessage(getString(R.string.please_wait));
+	}
+
+	@Override
+	protected void onPreExecute() {
+		super.onPreExecute();
+		dialog.show();
+	}
+
+	@Override
+	protected RatesList doInBackground(Currency... params) {
+		return service.getCurrencyTable(params[0]);
+	}
+
+	@Override
+	protected void onPostExecute(RatesList currencies) {
+		super.onPostExecute(currencies);
+		dialog.dismiss();
+		currencyListView.setAdapter(new CurrencyListAdapter(ListCurrenciesActivity.this, currencies));
+	}
+}
+
+
+Dodajemy metodę:
+
+private void loadData() {
+	new GetCurrencyTableTask(this).execute();
+}
+
+Pozostaje w metodzie onCreate wywołać metodę loadData.

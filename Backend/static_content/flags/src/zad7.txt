@@ -1,0 +1,34 @@
+Do pliku build.gradle w tagu dependecsies dodajemy:
+
+compile 'com.squareup.picasso:picasso:+'
+
+
+Następnie dodajemy klasę pomocniczą dostarczającą adresy poszczególnych flag:
+
+public class FlagAddress {
+
+	public static String obtainAddress(Currency currency) {
+		return "http://192.168.0.11:8087/" + currency.getCountry().toLowerCase().replace(" ", "") + ".png";
+	}
+}
+
+
+Uaktualniamy ViewHolder
+
+protected class ViewHolder {
+@InjectView(R.id.currencyName)
+	TextView currencyName;
+	@InjectView(R.id.averageRate)
+	TextView averageRate;
+	@InjectView(R.id.flag)
+	ImageView flag;
+
+	private ViewHolder(View rootView) {
+		ButterKnife.inject(this, rootView);
+	}
+}
+
+
+W metodzie populate dodajemy pobranie obrazków za pomocą Picasso:
+
+Picasso.with(context).load(FlagAddress.obtainAddress(exchangeRate.getCurrency())).placeholder(R.drawable.money).into(flag);

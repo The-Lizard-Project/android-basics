@@ -1,0 +1,281 @@
+Activity_change_currency.xml:
+
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+          android:id="@+id/list"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"/>
+
+
+ListCurrenciesActivity:
+
+public class ListCurrenciesActivity extends Activity {
+
+	@InjectView(R.id.list)
+	protected ListView currencyListView;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_change_currency);
+		ButterKnife.inject(this);
+	}
+}
+
+
+Dodajemy do build.gradle w tagu dependencies:
+
+compile 'com.jakewharton:butterknife:+'
+
+
+Dodajemy do MainActivity otwieranie nowej aktywności po naciśnięciu buttona.
+W metodzie onCreate() dodajemy:
+
+button.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) {
+Intent i = new Intent(getApplicationContext(), ListCurrenciesActivity.class);
+startActivity(i);
+}
+});
+
+
+Tworzymy layout dla pojedyńczego elementu listy:
+item_currency_list.xml:
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/flag"
+        android:layout_width="36dp"
+        android:layout_height="36dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/currencyName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="6dp"
+            android:text="Name"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <TextView
+            android:id="@+id/averageRate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="6dp"
+            android:text="1 EUR 4 PLN"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+    </LinearLayout>
+
+</LinearLayout>
+
+
+Na podstawie json’a tworzymy klasy modelu:
+
+RatesList:
+
+public class RatesList {
+
+	private String date;
+	private Currency base;
+	private List<ExchangeRate> rates;
+
+	public RatesList(String date, Currency base, List<ExchangeRate> exchangeRates) {
+		this.date = date;
+		this.base = base;
+		this.rates = exchangeRates;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public Currency getBase() {
+		return base;
+	}
+
+	public void setBase(Currency base) {
+		this.base = base;
+	}
+
+	public List<ExchangeRate> getExchangeRates() {
+		return rates;
+	}
+
+	public void setExchangeRates(List<ExchangeRate> exchangeRates) {
+		this.rates = exchangeRates;
+	}
+}
+
+
+ExchangeRate:
+
+public class ExchangeRate implements Serializable {
+
+	private final Currency currency;
+	private Float rate;
+
+	public ExchangeRate(Currency currency, Float rate) {
+		this.currency = currency;
+		this.rate = rate;
+	}
+
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public Float getRate() {
+		return rate;
+	}
+
+	public void setRate(Float rate) {
+		this.rate = rate;
+	}
+}
+
+
+Tworzymy adapter dla listy:
+CurrencyListAdapter:
+
+public class CurrencyListAdapter extends BaseAdapter {
+
+	private final Context context;
+	private final List<ExchangeRate> exchangeRates;
+	private final LayoutInflater inflater;
+
+	public CurrencyListAdapter(Context context, RatesList currencyTable) {
+		this.context = context;
+		this.currencyTable = currencyTable;
+	inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	}
+
+	@Override
+	public int getCount() {
+		return exchangeRates.size();
+	}
+
+	@Override
+	public ExchangeRate getItem(int position) {
+		return exchangeRates.get(position);
+	}
+
+	@Override
+	public long getItemId(int position) {
+		return position;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		return convertView;
+}
+}
+
+
+Dodajemy klasę wewnętrzną.
+ViewHolder:
+
+protected class ViewHolder {
+	@InjectView(R.id.currencyName)
+	TextView currencyName;
+	@InjectView(R.id.averageRate)
+	TextView averageRate;
+
+	private ViewHolder(View rootView) {
+		ButterKnife.inject(this, rootView);
+	}
+
+protected void populate(ExchangeRate exchangeRate) {
+currencyName.setText(exchangeRate.getCurrency().getCountry() + " " +                      exchangeRate.getCurrency().getCurrencyName());
+	            averageRate.setText(exchangeRate.getRate().toString());
+	}
+}
+
+
+Definiujemy jak wypełniany ma być element listy.
+W metodzie getView() dodajemy:
+
+@Override
+public View getView(int position, View convertView, ViewGroup parent) {
+	ViewHolder vh;
+	if (convertView == null) {
+		convertView = inflater.inflate(R.layout.item_currency_list, parent, false);
+		vh = new ViewHolder(convertView);
+		convertView.setTag(vh);
+	} else {
+		vh = (ViewHolder) convertView.getTag();
+	}
+
+	ExchangeRate exchangeRate = getItem(position);
+vh.populate(exchangeRate);
+
+	return convertView;
+}
+
+
+Ważne, by przy inflatowaniu podać jako parametr attacheToRoot „false”(pogrubione w powyższym listingu), ponieważ adapter pod spodem robi to za nas, więc podpięcie samodzielnie spowalnia cały proces.
+
+
+Tworzymy dane testowe i dodajemy adapter do listy w ListCurrenciesActivity w metodzie onCreate():
+
+MockData:
+
+public class MockData {
+
+	static RatesList ratesList;
+
+	public static RatesList getListOfRates() {
+		if (ratesList == null) {
+			List<ExchangeRate> rates = new ArrayList<ExchangeRate>();
+			rates.add(new ExchangeRate(Currency.AUD, 0.3431f));
+			rates.add(new ExchangeRate(Currency.BGN, 0.4724f));
+			rates.add(new ExchangeRate(Currency.BRL, 0.7974f));
+			rates.add(new ExchangeRate(Currency.CAD, 0.3326f));
+			rates.add(new ExchangeRate(Currency.CHF, 0.2584f));
+			rates.add(new ExchangeRate(Currency.CNY, 1.676f));
+			rates.add(new ExchangeRate(Currency.CZK, 6.6242f));
+			rates.add(new ExchangeRate(Currency.DKK, 1.8007f));
+			rates.add(new ExchangeRate(Currency.GBP, 0.1752f));
+			rates.add(new ExchangeRate(Currency.HKD, 2.0737f));
+			rates.add(new ExchangeRate(Currency.HRK, 1.85f));
+			rates.add(new ExchangeRate(Currency.HUF, 73.764f));
+			rates.add(new ExchangeRate(Currency.IDR, 3469.59f));
+			rates.add(new ExchangeRate(Currency.ILS, 1.0694f));
+			rates.add(new ExchangeRate(Currency.INR, 16.646f));
+			rates.add(new ExchangeRate(Currency.JPY, 32.152f));
+			rates.add(new ExchangeRate(Currency.KRW, 294.43f));
+			rates.add(new ExchangeRate(Currency.MXN, 4.0236f));
+			rates.add(new ExchangeRate(Currency.MYR, 0.9763f));
+			rates.add(new ExchangeRate(Currency.NOK, 2.0644f));
+			rates.add(new ExchangeRate(Currency.NZD, 0.357f));
+			rates.add(new ExchangeRate(Currency.PHP, 11.8f));
+			rates.add(new ExchangeRate(Currency.RON, 1.0738f));
+			rates.add(new ExchangeRate(Currency.RUB, 16.332f));
+			rates.add(new ExchangeRate(Currency.SEK, 2.2258f));
+			rates.add(new ExchangeRate(Currency.SGD, 0.3661f));
+			rates.add(new ExchangeRate(Currency.THB, 8.6685f));
+			rates.add(new ExchangeRate(Currency.TRY, 0.6924f));
+			rates.add(new ExchangeRate(Currency.USD, 0.2674f));
+			rates.add(new ExchangeRate(Currency.ZAR, 3.1443f));
+			rates.add(new ExchangeRate(Currency.EUR, 0.2416f));
+			ratesList = new RatesList("2015-03-07", Currency.PLN, rates);
+		}
+		return ratesList;
+	}
+
+
+ListCurrenciesActivity -> onCreate():
+
+CurrencyListAdapter adapter = new CurrencyListAdapter(this, MockData. getListOfRates());
+currencyListView.setAdapter(adapter);

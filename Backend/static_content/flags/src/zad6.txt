@@ -1,0 +1,45 @@
+By zobaczyć rezultat zapisu w pamięci dodamy pole tekstowe w MainActivity z aktualnie wybraną walutą.
+Edytujemy activity_main.xml:
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  android:orientation="vertical"
+			  android:gravity="center">
+
+	<TextView
+		android:id="@+id/currentCurrency"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="20sp"
+		android:textStyle="bold" />
+
+	<Button
+		android:id="@+id/listCurrenciesButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/open_exchange_rates_list" />
+
+	<Button
+		android:id="@+id/rateChangeButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/change_rate_manually" />
+
+</LinearLayout>
+
+Oraz obsługujemy pobieranie z pamięci w MainActivity:
+W metodzie onCreate:
+
+currentCurrency = (TextView) findViewById(R.id.currentCurrency);
+
+
+Dodajemy metodę:
+
+@Override
+protected void onResume() {
+	super.onResume();
+	currentExchangeRate = SharedPreferencesSupporter.loadCurrentRate(this);
+	final Currency currency = currentExchangeRate.getCurrency();
+	currentCurrency.setText("Twoja waluta to: " + currency.getCountry() + " " + currency.getCurrencyName() + "\nKurs: " + currentExchangeRate.getRate()); 
+}

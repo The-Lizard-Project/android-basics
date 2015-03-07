@@ -1,19 +1,4 @@
-package basic.android.fp.pl.androidbasic.dialog;
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextWatcher;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import basic.android.fp.pl.androidbasic.R;
-import basic.android.fp.pl.androidbasic.model.ExchangeRate;
+Dodajemy klasę definiującą dialog do edycji waluty:
 
 public class RateChangeDialogFragment extends DialogFragment {
 
@@ -102,6 +87,7 @@ public class RateChangeDialogFragment extends DialogFragment {
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
 		}
 
+
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 		}
@@ -118,4 +104,25 @@ public class RateChangeDialogFragment extends DialogFragment {
 
 		void onRateChanged(ExchangeRate currency);
 	}
+}
+
+
+W MainActivity dodajemy obsługę klikania na drugi button:
+
+changeCurrencyDialogButton.setOnClickListener(new View.OnClickListener() {
+	@Override
+	public void onClick(View v) {
+	RateChangeDialogFragment.getInstance(currentExchangeRate).show(getFragmentManager(), "tag");	
+}
+});
+
+
+Oraz implementacje interfejsu OnCurrencychangedListener
+
+@Override
+public void onRateChanged(ExchangeRate exchangeRate) {
+	currentExchangeRate = exchangeRate;
+	final Currency currency = exchangeRate.getCurrency();
+	currentCurrency.setText("Twoja waluta to: " + currency.getCountry() + " " + currency.getCurrencyName() + "\nKurs: " + exchangeRate.getRate());
+	SharedPreferencesSupporter.saveCurrentRate(exchangeRate, this);
 }
