@@ -14,7 +14,7 @@ public class SharedPreferencesSupporter {
 
 	public static ExchangeRate loadCurrentRate(Context context) {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		float averageRate = preferences.getFloat(CURRENCY_MAIN_KEY + AVERAGE_RATE, 1f);
+		float averageRate = preferences.getFloat(CURRENCY_MAIN_KEY + AVERAGE_RATE, 3.73f);
 		String name = preferences.getString(CURRENCY_MAIN_KEY + NAME, Currency.PLN.toString());
 		return new ExchangeRate(Currency.valueOf(name), averageRate);
 	}
