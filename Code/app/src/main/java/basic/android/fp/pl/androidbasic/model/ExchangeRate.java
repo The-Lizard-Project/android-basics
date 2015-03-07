@@ -7,9 +7,9 @@ import basic.android.fp.pl.androidbasic.util.Currency;
 public class ExchangeRate implements Serializable {
 
 	private final Currency currency;
-	private Double rate;
+	private Float rate;
 
-	public ExchangeRate(Currency currency, Double rate) {
+	public ExchangeRate(Currency currency, Float rate) {
 		this.currency = currency;
 		this.rate = rate;
 	}
@@ -18,11 +18,11 @@ public class ExchangeRate implements Serializable {
 		return currency;
 	}
 
-	public Double getRate() {
+	public Float getRate() {
 		return rate;
 	}
 
-	public void setRate(Double rate) {
+	public void setRate(Float rate) {
 		this.rate = rate;
 	}
 }
