@@ -1,3 +1,7 @@
+W Build gradle nalezy dodac linijke:
+
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+
 Tworzymy API które definiuje punkty dostępu do serwisu.
 
 public interface JsonRatesService {
@@ -8,6 +12,8 @@ public interface JsonRatesService {
 
 
 W ListCurrenciesActivity w metodzie onCreate() konfigurujemy adapter serwisu.
+
+Bedzie tez trzeba dodac zasob tekstowy o nazwie webservice_url i wartosci http://83.230.72.199:8086
 
 Gson gson = new GsonBuilder().
 setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).
