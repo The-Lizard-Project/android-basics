@@ -87,7 +87,6 @@ public class RateChangeDialogFragment extends DialogFragment {
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
 		}
 
-
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 		}
@@ -117,12 +116,13 @@ changeCurrencyDialogButton.setOnClickListener(new View.OnClickListener() {
 });
 
 
-Oraz implementacje interfejsu OnCurrencychangedListener
+Oraz implementujemy interfejs OnCurrencychangedListener w MainActivity
+
+public class MainActivity extends Activity implements RateChangeDialogFragment.OnCurrencyChangedListener
 
 @Override
 public void onRateChanged(ExchangeRate exchangeRate) {
 	currentExchangeRate = exchangeRate;
-	final Currency currency = exchangeRate.getCurrency();
-	currentCurrency.setText("Twoja waluta to: " + currency.getCountry() + " " + currency.getCurrencyName() + "\nKurs: " + exchangeRate.getRate());
+	currentCurrency.setText("Twoja waluta to: " + exchangeRate.getCountry() + " " + exchangeRate.getCurrency() + "\nKurs: " + exchangeRate.getRate());
 	SharedPreferencesSupporter.saveCurrentRate(exchangeRate, this);
 }

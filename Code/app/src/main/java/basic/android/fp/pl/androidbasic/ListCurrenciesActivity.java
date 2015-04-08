@@ -11,10 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import basic.android.fp.pl.androidbasic.adapter.CurrencyListAdapter;
 import basic.android.fp.pl.androidbasic.model.ExchangeRate;
 import basic.android.fp.pl.androidbasic.model.RatesList;
@@ -24,7 +20,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnItemClick;
 import retrofit.RestAdapter;
-import retrofit.converter.GsonConverter;
 
 public class ListCurrenciesActivity extends Activity {
 
@@ -38,13 +33,8 @@ public class ListCurrenciesActivity extends Activity {
 		setContentView(R.layout.activity_change_currency);
 		ButterKnife.inject(this);
 
-		Gson gson = new GsonBuilder().
-				setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).
-				create();
-
 		RestAdapter restAdapter = new RestAdapter.Builder().
 				setEndpoint(getString(R.string.webservice_url) + ":" + getString(R.string.webservice_port)).
-				setConverter(new GsonConverter(gson)).
 				build();
 
 		service = restAdapter.create(JsonRatesService.class);
@@ -56,9 +46,8 @@ public class ListCurrenciesActivity extends Activity {
 	void onListItemClick(AdapterView<?> parent, int position) {
 		CurrencyListAdapter currencyAdapter = (CurrencyListAdapter) parent.getAdapter();
 		ExchangeRate exchangeRate = currencyAdapter.getItem(position);
-		SharedPreferencesSupporter.saveCurrentRate(exchangeRate, ListCurrenciesActivity.this);
+		SharedPreferencesSupporter.saveCurrentRate(exchangeRate, this);
 		Toast.makeText(this, "Currency saved to SharedPreferences", Toast.LENGTH_SHORT).show();
-		loadData();
 	}
 
 	@Override

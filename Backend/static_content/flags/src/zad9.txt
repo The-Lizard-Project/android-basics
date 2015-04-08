@@ -14,8 +14,12 @@ Change_currency.xml:
         android:icon="@drawable/ic_menu_refresh"/>
 </menu>
 
+Zmieniamy styl aplikacji na:
 
-Wracamy do ChangeCurrencyActivity i dodajemy metody:
+<style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar"> 
+
+
+Wracamy do ListCurrenciesActivity i dodajemy metody:
 
 @Override
 public boolean onCreateOptionsMenu(Menu menu) {

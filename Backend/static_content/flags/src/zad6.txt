@@ -40,6 +40,5 @@ Dodajemy metodę:
 protected void onResume() {
 	super.onResume();
 	currentExchangeRate = SharedPreferencesSupporter.loadCurrentRate(this);
-	final Currency currency = currentExchangeRate.getCurrency();
-	currentCurrency.setText("Twoja waluta to: " + currency.getCountry() + " " + currency.getCurrencyName() + "\nKurs: " + currentExchangeRate.getRate()); 
+	currentCurrency.setText("Twoja waluta to: " + currentExchangeRate.getCountry() + " " + currentExchangeRate.getCurrency() + "\nKurs: " + currentExchangeRate.getRate());
 }

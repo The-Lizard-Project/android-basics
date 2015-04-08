@@ -31,11 +31,11 @@ Dodajemy do MainActivity otwieranie nowej aktywności po naciśnięciu buttona.
 W metodzie onCreate() dodajemy:
 
 button.setOnClickListener(new View.OnClickListener() {
-@Override
-public void onClick(View v) {
-Intent i = new Intent(getApplicationContext(), ListCurrenciesActivity.class);
-startActivity(i);
-}
+	@Override
+	public void onClick(View v) {
+		Intent i = new Intent(getApplicationContext(), ListCurrenciesActivity.class);
+		startActivity(i);
+	}
 });
 
 
@@ -49,9 +49,10 @@ item_currency_list.xml:
               android:orientation="horizontal">
 
     <ImageView
-        android:id="@+id/flag"
-        android:layout_width="36dp"
-        android:layout_height="36dp"/>
+		android:id="@+id/flag"
+		android:layout_width="36dp"
+		android:layout_height="36dp"
+		android:src="@drawable/money" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -84,38 +85,18 @@ RatesList:
 
 public class RatesList {
 
-	private String date;
-	private Currency base;
-	private List<ExchangeRate> rates;
+	private final String date;
+	private final ExchangeRate base;
+	private final List<ExchangeRate> rates;
 
-	public RatesList(String date, Currency base, List<ExchangeRate> exchangeRates) {
+	public RatesList(String date, ExchangeRate base, List<ExchangeRate> exchangeRates) {
 		this.date = date;
 		this.base = base;
 		this.rates = exchangeRates;
-	}
-
-	public String getDate() {
-		return date;
-	}
-
-	public void setDate(String date) {
-		this.date = date;
-	}
-
-	public Currency getBase() {
-		return base;
-	}
-
-	public void setBase(Currency base) {
-		this.base = base;
 	}
 
 	public List<ExchangeRate> getExchangeRates() {
 		return rates;
-	}
-
-	public void setExchangeRates(List<ExchangeRate> exchangeRates) {
-		this.rates = exchangeRates;
 	}
 }
 
@@ -124,16 +105,22 @@ ExchangeRate:
 
 public class ExchangeRate implements Serializable {
 
-	private final Currency currency;
+	private final String currency;
+	private final String country;
 	private Float rate;
 
-	public ExchangeRate(Currency currency, Float rate) {
+	public ExchangeRate(String currency, String country, Float rate) {
 		this.currency = currency;
+		this.country = country;
 		this.rate = rate;
 	}
 
-	public Currency getCurrency() {
+	public String getCurrency() {
 		return currency;
+	}
+
+	public String getCountry() {
+		return country;
 	}
 
 	public Float getRate() {
@@ -155,10 +142,10 @@ public class CurrencyListAdapter extends BaseAdapter {
 	private final List<ExchangeRate> exchangeRates;
 	private final LayoutInflater inflater;
 
-	public CurrencyListAdapter(Context context, RatesList currencyTable) {
+	public CurrencyListAdapter(Context context, RatesList ratesList) {
 		this.context = context;
-		this.currencyTable = currencyTable;
-	inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		exchangeRates = ratesList.getExchangeRates();
+		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
@@ -197,8 +184,8 @@ protected class ViewHolder {
 	}
 
 protected void populate(ExchangeRate exchangeRate) {
-currencyName.setText(exchangeRate.getCurrency().getCountry() + " " +                      exchangeRate.getCurrency().getCurrencyName());
-	            averageRate.setText(exchangeRate.getRate().toString());
+		currencyName.setText(exchangeRate.getCountry() + " " + exchangeRate.getCurrency());
+	    averageRate.setText(exchangeRate.getRate().toString());
 	}
 }
 
@@ -233,47 +220,46 @@ MockData:
 
 public class MockData {
 
-	static RatesList ratesList;
+	private static RatesList ratesList;
 
 	public static RatesList getListOfRates() {
 		if (ratesList == null) {
-			List<ExchangeRate> rates = new ArrayList<ExchangeRate>();
-			rates.add(new ExchangeRate(Currency.AUD, 0.3431f));
-			rates.add(new ExchangeRate(Currency.BGN, 0.4724f));
-			rates.add(new ExchangeRate(Currency.BRL, 0.7974f));
-			rates.add(new ExchangeRate(Currency.CAD, 0.3326f));
-			rates.add(new ExchangeRate(Currency.CHF, 0.2584f));
-			rates.add(new ExchangeRate(Currency.CNY, 1.676f));
-			rates.add(new ExchangeRate(Currency.CZK, 6.6242f));
-			rates.add(new ExchangeRate(Currency.DKK, 1.8007f));
-			rates.add(new ExchangeRate(Currency.GBP, 0.1752f));
-			rates.add(new ExchangeRate(Currency.HKD, 2.0737f));
-			rates.add(new ExchangeRate(Currency.HRK, 1.85f));
-			rates.add(new ExchangeRate(Currency.HUF, 73.764f));
-			rates.add(new ExchangeRate(Currency.IDR, 3469.59f));
-			rates.add(new ExchangeRate(Currency.ILS, 1.0694f));
-			rates.add(new ExchangeRate(Currency.INR, 16.646f));
-			rates.add(new ExchangeRate(Currency.JPY, 32.152f));
-			rates.add(new ExchangeRate(Currency.KRW, 294.43f));
-			rates.add(new ExchangeRate(Currency.MXN, 4.0236f));
-			rates.add(new ExchangeRate(Currency.MYR, 0.9763f));
-			rates.add(new ExchangeRate(Currency.NOK, 2.0644f));
-			rates.add(new ExchangeRate(Currency.NZD, 0.357f));
-			rates.add(new ExchangeRate(Currency.PHP, 11.8f));
-			rates.add(new ExchangeRate(Currency.RON, 1.0738f));
-			rates.add(new ExchangeRate(Currency.RUB, 16.332f));
-			rates.add(new ExchangeRate(Currency.SEK, 2.2258f));
-			rates.add(new ExchangeRate(Currency.SGD, 0.3661f));
-			rates.add(new ExchangeRate(Currency.THB, 8.6685f));
-			rates.add(new ExchangeRate(Currency.TRY, 0.6924f));
-			rates.add(new ExchangeRate(Currency.USD, 0.2674f));
-			rates.add(new ExchangeRate(Currency.ZAR, 3.1443f));
-			rates.add(new ExchangeRate(Currency.EUR, 0.2416f));
-			ratesList = new RatesList("2015-03-07", Currency.PLN, rates);
+			List<ExchangeRate> rates = new ArrayList<>();
+			rates.add(new ExchangeRate("Dollar", "Australia", 0.3431f));
+			rates.add(new ExchangeRate("Lev", "Bulgaria", 0.4724f));
+			rates.add(new ExchangeRate("Real", "Brazil", 0.7974f));
+			rates.add(new ExchangeRate("Dollar", "Canada", 0.3326f));
+			rates.add(new ExchangeRate("Franc", "Switzerland", 0.2584f));
+			rates.add(new ExchangeRate("Yuan Renminbi", "China", 1.676f));
+			rates.add(new ExchangeRate("Koruna", "Czech Republic", 6.6242f));
+			rates.add(new ExchangeRate("Krone", "Denmark", 1.8007f));
+			rates.add(new ExchangeRate("Pound", "United Kingdom", 0.1752f));
+			rates.add(new ExchangeRate("Dollar", "Hong Kong", 2.0737f));
+			rates.add(new ExchangeRate("Kuna", "Croatia", 1.85f));
+			rates.add(new ExchangeRate("Forint", "Hungary", 73.764f));
+			rates.add(new ExchangeRate("Rupiah", "Indonesia", 3469.59f));
+			rates.add(new ExchangeRate("Shekel", "Israel", 1.0694f));
+			rates.add(new ExchangeRate("Rupee", "India", 16.646f));
+			rates.add(new ExchangeRate("Yen", "Japan", 32.152f));
+			rates.add(new ExchangeRate("Won", "Korea (South)", 294.43f));
+			rates.add(new ExchangeRate("Peso", "Mexico", 4.0236f));
+			rates.add(new ExchangeRate("Ringgit", "Malaysia", 0.9763f));
+			rates.add(new ExchangeRate("Krone", "Norway", 2.0644f));
+			rates.add(new ExchangeRate("Dollar", "New Zealand", 0.357f));
+			rates.add(new ExchangeRate("Peso", "Philippines", 11.8f));
+			rates.add(new ExchangeRate("New Leu", "Romania", 1.0738f));
+			rates.add(new ExchangeRate("Ruble", "Russia", 16.332f));
+			rates.add(new ExchangeRate("Krona", "Sweden", 2.2258f));
+			rates.add(new ExchangeRate("Dollar", "Singapore", 0.3661f));
+			rates.add(new ExchangeRate("Baht", "Thailand", 8.6685f));
+			rates.add(new ExchangeRate("Lira", "Turkey", 0.6924f));
+			rates.add(new ExchangeRate("Rand", "South Africa", 3.1443f));
+			rates.add(new ExchangeRate("Euro", "Euro Member", 0.2416f));
+			ratesList = new RatesList("2015-03-07", new ExchangeRate("Zloty", "Poland", 0f), rates);
 		}
 		return ratesList;
 	}
-
+}
 
 ListCurrenciesActivity -> onCreate():
 

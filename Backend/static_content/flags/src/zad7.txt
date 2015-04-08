@@ -5,10 +5,12 @@ compile 'com.squareup.picasso:picasso:+'
 
 Następnie dodajemy klasę pomocniczą dostarczającą adresy poszczególnych flag:
 
-public class FlagAddress {
+public class FlagAddressBuilder {
 
-	public static String obtainAddress(Currency currency) {
-		return "http://192.168.0.11:8087/" + currency.getCountry().toLowerCase().replace(" ", "") + ".png";
+	public static String obtainAddress(Context context, ExchangeRate rate) {
+		String ws_url = context.getString(R.string.webservice_url);
+		String port = context.getString(R.string.static_webservice_port);
+		return ws_url + ":" + port + "/" + rate.getCountry().toLowerCase().replace(" ", "") + ".png";
 	}
 }
 
@@ -31,4 +33,4 @@ protected class ViewHolder {
 
 W metodzie populate dodajemy pobranie obrazków za pomocą Picasso:
 
-Picasso.with(context).load(FlagAddress.obtainAddress(exchangeRate.getCurrency())).placeholder(R.drawable.money).into(flag);
+Picasso.with(context).load(FlagAddressBuilder.obtainAddress(context, exchangeRate)).placeholder(R.drawable.money).into(flag);

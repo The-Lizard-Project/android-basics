@@ -1,4 +1,5 @@
 Tworzymy nowe activity:
+
 public class ExchangeActivity extends Activity {
 
 	public static final String CURRENCY_BUNDLE_KEY = "CURRENCY_BUNDLE_KEY";
