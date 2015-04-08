@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import basic.android.fp.pl.androidbasic.dialog.RateChangeDialogFragment;
 import basic.android.fp.pl.androidbasic.model.ExchangeRate;
-import basic.android.fp.pl.androidbasic.util.Currency;
 import basic.android.fp.pl.androidbasic.util.SharedPreferencesSupporter;
 
 public class MainActivity extends Activity implements RateChangeDialogFragment.OnCurrencyChangedListener {
@@ -56,15 +55,13 @@ public class MainActivity extends Activity implements RateChangeDialogFragment.O
 	protected void onResume() {
 		super.onResume();
 		currentExchangeRate = SharedPreferencesSupporter.loadCurrentRate(this);
-		final Currency currency = currentExchangeRate.getCurrency();
-		currentCurrency.setText("Twoja waluta to: " + currency.getCountry() + " " + currency.getCurrencyName() + "\nKurs: " + currentExchangeRate.getRate());
+		currentCurrency.setText("Twoja waluta to: " + currentExchangeRate.getCountry() + " " + currentExchangeRate.getCurrency() + "\nKurs: " + currentExchangeRate.getRate());
 	}
 
 	@Override
 	public void onRateChanged(ExchangeRate exchangeRate) {
 		currentExchangeRate = exchangeRate;
-		final Currency currency = exchangeRate.getCurrency();
-		currentCurrency.setText("Twoja waluta to: " + currency.getCountry() + " " + currency.getCurrencyName() + "\nKurs: " + exchangeRate.getRate());
+		currentCurrency.setText("Twoja waluta to: " + exchangeRate.getCountry() + " " + exchangeRate.getCurrency() + "\nKurs: " + exchangeRate.getRate());
 		SharedPreferencesSupporter.saveCurrentRate(exchangeRate, this);
 	}
 }

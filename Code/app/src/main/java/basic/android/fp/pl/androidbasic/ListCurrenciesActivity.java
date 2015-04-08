@@ -18,9 +18,7 @@ import com.google.gson.GsonBuilder;
 import basic.android.fp.pl.androidbasic.adapter.CurrencyListAdapter;
 import basic.android.fp.pl.androidbasic.model.ExchangeRate;
 import basic.android.fp.pl.androidbasic.model.RatesList;
-import basic.android.fp.pl.androidbasic.network.adapter.CurrencyTypeAdapter;
 import basic.android.fp.pl.androidbasic.network.api.JsonRatesService;
-import basic.android.fp.pl.androidbasic.util.Currency;
 import basic.android.fp.pl.androidbasic.util.SharedPreferencesSupporter;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -42,11 +40,10 @@ public class ListCurrenciesActivity extends Activity {
 
 		Gson gson = new GsonBuilder().
 				setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).
-				registerTypeAdapter(Currency.class, new CurrencyTypeAdapter()).
 				create();
 
 		RestAdapter restAdapter = new RestAdapter.Builder().
-				setEndpoint(getString(R.string.webservice_url)).
+				setEndpoint(getString(R.string.webservice_url) + ":" + getString(R.string.webservice_port)).
 				setConverter(new GsonConverter(gson)).
 				build();
 

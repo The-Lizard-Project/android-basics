@@ -2,20 +2,24 @@ package basic.android.fp.pl.androidbasic.model;
 
 import java.io.Serializable;
 
-import basic.android.fp.pl.androidbasic.util.Currency;
-
 public class ExchangeRate implements Serializable {
 
-	private final Currency currency;
+	private final String currency;
+	private final String country;
 	private Float rate;
 
-	public ExchangeRate(Currency currency, Float rate) {
+	public ExchangeRate(String currency, String country, Float rate) {
 		this.currency = currency;
+		this.country = country;
 		this.rate = rate;
 	}
 
-	public Currency getCurrency() {
+	public String getCurrency() {
 		return currency;
+	}
+
+	public String getCountry() {
+		return country;
 	}
 
 	public Float getRate() {

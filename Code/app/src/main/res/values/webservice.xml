@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="webservice_url">http://10.57.149.37:8086</string>
+	<string name="webservice_url">http://192.168.50.100</string>
+	<string name="webservice_port">8086</string>
+	<string name="static_webservice_port">8087</string>
 </resources>

@@ -15,7 +15,7 @@ import java.util.List;
 import basic.android.fp.pl.androidbasic.R;
 import basic.android.fp.pl.androidbasic.model.ExchangeRate;
 import basic.android.fp.pl.androidbasic.model.RatesList;
-import basic.android.fp.pl.androidbasic.util.FlagAddress;
+import basic.android.fp.pl.androidbasic.util.FlagAddressBuilder;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -77,9 +77,9 @@ public class CurrencyListAdapter extends BaseAdapter {
 		}
 
 		protected void populate(ExchangeRate exchangeRate) {
-			currencyName.setText(exchangeRate.getCurrency().getCountry() + " " + exchangeRate.getCurrency().getCurrencyName());
+			currencyName.setText(exchangeRate.getCountry() + " " + exchangeRate.getCurrency());
 			averageRate.setText(exchangeRate.getRate().toString());
-			Picasso.with(context).load(FlagAddress.obtainAddress(exchangeRate.getCurrency())).placeholder(R.drawable.money).into(flag);
+			Picasso.with(context).load(FlagAddressBuilder.obtainAddress(context, exchangeRate)).placeholder(R.drawable.money).into(flag);
 		}
 	}
 }
