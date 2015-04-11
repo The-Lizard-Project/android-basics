@@ -28,8 +28,9 @@ Edytujemy activity_main.xml:
 
 </LinearLayout>
 
+
 Oraz obsługujemy pobieranie z pamięci w MainActivity:
-W metodzie onCreate:
+W metodzie onCreate dodajemy wyszukanie nowego widoku:
 
 currentCurrency = (TextView) findViewById(R.id.currentCurrency);
 
@@ -40,5 +41,11 @@ Dodajemy metodę:
 protected void onResume() {
 	super.onResume();
 	currentExchangeRate = SharedPreferencesSupporter.loadCurrentRate(this);
-	currentCurrency.setText("Twoja waluta to: " + currentExchangeRate.getCountry() + " " + currentExchangeRate.getCurrency() + "\nKurs: " + currentExchangeRate.getRate());
+currentCurrency.setText("Twoja waluta to: " + currentExchangeRate.getCountry() + " " + currentExchangeRate.getCurrency() + "\nKurs: " + currentExchangeRate.getRate());
 }
+
+
+Tworzymy pola:
+
+private TextView currentCurrency;
+private ExchangeRate currentExchangeRate;

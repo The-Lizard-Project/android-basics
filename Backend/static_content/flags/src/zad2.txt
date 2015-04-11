@@ -1,8 +1,5 @@
 MainActivity:
 
-import android.os.Bundle;
-import android.widget.Button;
-
 public class MainActivity extends Activity {
 
 	@Override
@@ -42,3 +39,7 @@ Do pliku strings.xml należy dodać dwa teksty:
 
 <string name="change_rate_manually">Zmien kurs ręcznie</string>
 <string name="open_exchange_rates_list">Otwórz listę kursów</string>
+
+Zmieniamy styl aplikacji w styles.xml na:
+
+<style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar"> 

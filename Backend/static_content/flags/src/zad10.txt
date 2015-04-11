@@ -39,7 +39,7 @@ public class RateChangeDialogFragment extends DialogFragment {
 		inputEditText = createInputEditText();
 
 		return new AlertDialog.Builder(getActivity()) //
-				.setIcon(R.drawable.ic_launcher) //
+				.setIcon(R.mipmap.ic_launcher) //
 				.setTitle(R.string.dialog_title) //
 				.setMessage(R.string.dialog_message) //
 				.setPositiveButton(R.string.ok, new PositiveOnClickListener()) //
@@ -104,6 +104,15 @@ public class RateChangeDialogFragment extends DialogFragment {
 		void onRateChanged(ExchangeRate currency);
 	}
 }
+
+
+Dodajemy zasoby tekstowe:
+
+<string name="dialog_title">Zmiana waluty</string>
+<string name="dialog_message">Zmieńmy wartość przelicznika</string>
+<string name="ok">OK</string>
+<string name="cancel">Cancel</string>
+<string name="invalid">Nieprawidłowa liczba</string>
 
 
 W MainActivity dodajemy obsługę klikania na drugi button:

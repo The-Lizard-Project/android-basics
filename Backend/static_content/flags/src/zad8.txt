@@ -1,6 +1,7 @@
 W Build gradle nalezy dodac linijke:
 
-compile 'com.squareup.retrofit:retrofit:1.9.0'
+compile 'com.squareup.retrofit:retrofit:+'
+
 
 Tworzymy API które definiuje punkty dostępu do serwisu.
 
@@ -23,6 +24,16 @@ service = restAdapter.create(JsonRatesService.class);
 
 
 Niejawnie używamy biblioteki GSON do parsowania JSON.
+
+
+Musimy jeszcze dodać pole:
+
+private JsonRatesService service;
+
+
+Oraz nowy zasób tekstowy:
+
+<string name="webservice_port">8086</string>
 
 
 Pobieranie z internet wywoływane musi być na osobnym wątku, inaczej rzucony zostanie NetworkOnMainThreadException. Dlatego oddelegujemy wywołanie operacji sieciowej do osobnego wątku. Zdefiniujemy wewnętrzną klasę rozszerzającą AsyncTask.
@@ -56,10 +67,24 @@ private class GetCurrencyTableTask extends AsyncTask<Void, Void, RatesList> {
 }
 
 
+Dodajemy zasób tekstowy:
+
+<string name="please_wait">Proszę czekać</string>
+
+
 Dodajemy metodę:
 
 private void loadData() {
 	new GetCurrencyTableTask(this).execute();
 }
 
+
 Pozostaje w metodzie onCreate wywołać metodę loadData.
+
+loadData();
+
+
+Usuwamy dane testowe z metody onCreate:
+
+CurrencyListAdapter adapter = new CurrencyListAdapter(this, MockData.getListOfRates());
+currencyListView.setAdapter(adapter);

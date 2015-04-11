@@ -1,5 +1,5 @@
 By zdefiniować menu kontekstowe oraz akcje w ActionBarze, należy utworzyć nowy plik w folderze menu.
-Change_currency.xml:
+change_currency.xml:
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
@@ -14,9 +14,10 @@ Change_currency.xml:
         android:icon="@drawable/ic_menu_refresh"/>
 </menu>
 
-Zmieniamy styl aplikacji na:
 
-<style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar"> 
+Dodajemy zasób tekstowy:
+
+<string name="action_refresh">Odśwież</string>
 
 
 Wracamy do ListCurrenciesActivity i dodajemy metody:

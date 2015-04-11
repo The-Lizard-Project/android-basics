@@ -15,10 +15,16 @@ public class FlagAddressBuilder {
 }
 
 
+Do zasobów strings.xml dodajemy adres i port webserwisu:
+
+<string name="webservice_url">http://... ip zostanie podane na warsztacie</string>
+<string name="static_webservice_port">8087</string>
+
+
 Uaktualniamy ViewHolder
 
 protected class ViewHolder {
-@InjectView(R.id.currencyName)
+	@InjectView(R.id.currencyName)
 	TextView currencyName;
 	@InjectView(R.id.averageRate)
 	TextView averageRate;
@@ -28,9 +34,19 @@ protected class ViewHolder {
 	private ViewHolder(View rootView) {
 		ButterKnife.inject(this, rootView);
 	}
+
+	protected void populate(ExchangeRate exchangeRate) {
+		currencyName.setText(exchangeRate.getCountry() + " " + exchangeRate.getCurrency());
+		averageRate.setText(exchangeRate.getRate().toString());
+	}
 }
 
 
 W metodzie populate dodajemy pobranie obrazków za pomocą Picasso:
 
 Picasso.with(context).load(FlagAddressBuilder.obtainAddress(context, exchangeRate)).placeholder(R.drawable.money).into(flag);
+
+
+By móc komunikować się z internetem należy nadać aplikacji pozwolenie w manifeście.
+
+<uses-permission android:name="android.permission.INTERNET" />

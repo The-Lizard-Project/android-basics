@@ -42,7 +42,7 @@ public class ExchangeActivity extends Activity {
 }
 
 
-Dodajemy layout:
+Dodajemy layout activity_exchange.xml:
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 			  android:layout_width="match_parent"
@@ -78,6 +78,11 @@ Dodajemy layout:
 </LinearLayout>
 
 
+Do manifestu dodajemy nową aktywność.
+
+<activity android:name=".ExchangeActivity" />
+
+
 Edytujemy metodę onCreate() w MainActivity – dodajemy:
 
 Button calculateCurrencyButton = (Button) findViewById(R.id.calculateCurrency);
@@ -90,3 +95,17 @@ calculateCurrencyButton.setOnClickListener(new View.OnClickListener() {
 			startActivity(i);
 		}
 });
+
+
+Pozostaje dodanie nowego przycisku do activity_main.xml
+
+<Button
+	android:id="@+id/calculateCurrency"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:text="@string/convert_currency" />
+		
+
+Oraz brakujący zasób tekstowy
+
+<string name="convert_currency">Przelicz waluty</string>

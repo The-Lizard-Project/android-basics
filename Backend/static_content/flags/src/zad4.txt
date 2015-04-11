@@ -1,4 +1,4 @@
-Activity_change_currency.xml:
+activity_change_currency.xml:
 
 <ListView xmlns:android="http://schemas.android.com/apk/res/android"
           android:id="@+id/list"
@@ -30,7 +30,7 @@ compile 'com.jakewharton:butterknife:+'
 Dodajemy do MainActivity otwieranie nowej aktywności po naciśnięciu buttona.
 W metodzie onCreate() dodajemy:
 
-button.setOnClickListener(new View.OnClickListener() {
+changeCurrencyButton.setOnClickListener(new View.OnClickListener() {
 	@Override
 	public void onClick(View v) {
 		Intent i = new Intent(getApplicationContext(), ListCurrenciesActivity.class);
@@ -39,10 +39,13 @@ button.setOnClickListener(new View.OnClickListener() {
 });
 
 
+Dodajemy nową aktywność do manifestu.
+<activity android:name=".ListCurrenciesActivity" />
+
+
 Tworzymy layout dla pojedyńczego elementu listy:
 item_currency_list.xml:
 
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -75,31 +78,29 @@ item_currency_list.xml:
             android:text="1 EUR 4 PLN"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
     </LinearLayout>
-
 </LinearLayout>
+
+Grafika money dostępna jest na serwerze z zadaniami.
+
+
+JSON otrzymywany z serwisu:
+
+{
+	"date" : "2015-04-02",
+	"base" : {
+		"currency" : "Dollar",
+		"country" : "United States"
+	},
+	"rates" : [{
+			"currency" : "Rupiah",
+			"rate" : 13001.44,
+			"country" : "Indonesia"
+		}
+	]
+}
 
 
 Na podstawie json’a tworzymy klasy modelu:
-
-RatesList:
-
-public class RatesList {
-
-	private final String date;
-	private final ExchangeRate base;
-	private final List<ExchangeRate> rates;
-
-	public RatesList(String date, ExchangeRate base, List<ExchangeRate> exchangeRates) {
-		this.date = date;
-		this.base = base;
-		this.rates = exchangeRates;
-	}
-
-	public List<ExchangeRate> getExchangeRates() {
-		return rates;
-	}
-}
-
 
 ExchangeRate:
 
@@ -132,8 +133,28 @@ public class ExchangeRate implements Serializable {
 	}
 }
 
+RatesList:
+
+public class RatesList {
+
+	private final String date;
+	private final ExchangeRate base;
+	private final List<ExchangeRate> rates;
+
+	public RatesList(String date, ExchangeRate base, List<ExchangeRate> exchangeRates) {
+		this.date = date;
+		this.base = base;
+		this.rates = exchangeRates;
+	}
+
+	public List<ExchangeRate> getExchangeRates() {
+		return rates;
+	}
+}
+
 
 Tworzymy adapter dla listy:
+
 CurrencyListAdapter:
 
 public class CurrencyListAdapter extends BaseAdapter {
@@ -166,7 +187,7 @@ public class CurrencyListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		return convertView;
-}
+	}
 }
 
 
@@ -205,7 +226,7 @@ public View getView(int position, View convertView, ViewGroup parent) {
 	}
 
 	ExchangeRate exchangeRate = getItem(position);
-vh.populate(exchangeRate);
+	vh.populate(exchangeRate);
 
 	return convertView;
 }
@@ -261,6 +282,7 @@ public class MockData {
 	}
 }
 
+Dodajemy dane do adaptera.
 ListCurrenciesActivity -> onCreate():
 
 CurrencyListAdapter adapter = new CurrencyListAdapter(this, MockData. getListOfRates());
