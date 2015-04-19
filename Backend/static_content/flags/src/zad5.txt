@@ -11,7 +11,7 @@ public class SharedPreferencesSupporter {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		float averageRate = preferences.getFloat(CURRENCY_MAIN_KEY + AVERAGE_RATE, 3.73f);
 		String currency = preferences.getString(CURRENCY_MAIN_KEY + CURRENCY, "Dollar");
-		String country = preferences.getString(CURRENCY_MAIN_KEY + CURRENCY, "United States");
+		String country = preferences.getString(CURRENCY_MAIN_KEY + COUNTRY, "United States");
 		return new ExchangeRate(currency, country, averageRate);
 	}
 
