@@ -1,10 +1,10 @@
 package basic.android.fp.pl.androidbasic;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
@@ -16,85 +16,85 @@ import basic.android.fp.pl.androidbasic.model.ExchangeRate;
 import basic.android.fp.pl.androidbasic.model.RatesList;
 import basic.android.fp.pl.androidbasic.network.api.JsonRatesService;
 import basic.android.fp.pl.androidbasic.util.SharedPreferencesSupporter;
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnItemClick;
 import retrofit.RestAdapter;
 
-public class ListCurrenciesActivity extends Activity {
+public class ListCurrenciesActivity extends AppCompatActivity {
 
-	@InjectView(R.id.list)
-	protected ListView currencyListView;
-	private JsonRatesService service;
+    @Bind(R.id.list)
+    protected ListView currencyListView;
+    private JsonRatesService service;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_change_currency);
-		ButterKnife.inject(this);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_change_currency);
+        ButterKnife.bind(this);
 
-		RestAdapter restAdapter = new RestAdapter.Builder().
-				setEndpoint(getString(R.string.webservice_url) + ":" + getString(R.string.webservice_port)).
-				build();
+        RestAdapter restAdapter = new RestAdapter.Builder().
+                setEndpoint(getString(R.string.webservice_url) + ":" + getString(R.string.webservice_port)).
+                build();
 
-		service = restAdapter.create(JsonRatesService.class);
+        service = restAdapter.create(JsonRatesService.class);
 
-		loadData();
-	}
+        loadData();
+    }
 
-	@OnItemClick(R.id.list)
-	void onListItemClick(AdapterView<?> parent, int position) {
-		CurrencyListAdapter currencyAdapter = (CurrencyListAdapter) parent.getAdapter();
-		ExchangeRate exchangeRate = currencyAdapter.getItem(position);
-		SharedPreferencesSupporter.saveCurrentRate(exchangeRate, this);
-		Toast.makeText(this, "Currency saved to SharedPreferences", Toast.LENGTH_SHORT).show();
-	}
+    @OnItemClick(R.id.list)
+    void onListItemClick(AdapterView<?> parent, int position) {
+        CurrencyListAdapter currencyAdapter = (CurrencyListAdapter) parent.getAdapter();
+        ExchangeRate exchangeRate = currencyAdapter.getItem(position);
+        SharedPreferencesSupporter.saveCurrentRate(exchangeRate, this);
+        Toast.makeText(this, "Currency saved to SharedPreferences", Toast.LENGTH_SHORT).show();
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.change_currency, menu);
-		return true;
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.change_currency, menu);
+        return true;
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.action_refresh || id == R.id.menu_refresh) {
-			loadData();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_refresh || id == R.id.menu_refresh) {
+            loadData();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-	private void loadData() {
-		new GetCurrencyTableTask(this).execute();
-	}
+    private void loadData() {
+        new GetCurrencyTableTask(this).execute();
+    }
 
-	private class GetCurrencyTableTask extends AsyncTask<Void, Void, RatesList> {
+    private class GetCurrencyTableTask extends AsyncTask<Void, Void, RatesList> {
 
-		private final ProgressDialog dialog;
+        private final ProgressDialog dialog;
 
-		public GetCurrencyTableTask(Context context) {
-			dialog = new ProgressDialog(context);
-			dialog.setMessage(getString(R.string.please_wait));
-		}
+        public GetCurrencyTableTask(Context context) {
+            dialog = new ProgressDialog(context);
+            dialog.setMessage(getString(R.string.please_wait));
+        }
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			dialog.show();
-		}
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.show();
+        }
 
-		@Override
-		protected RatesList doInBackground(Void... param) {
-			return service.getCurrencyTable();
-		}
+        @Override
+        protected RatesList doInBackground(Void... param) {
+            return service.getCurrencyTable();
+        }
 
-		@Override
-		protected void onPostExecute(RatesList currencies) {
-			super.onPostExecute(currencies);
-			dialog.dismiss();
-			currencyListView.setAdapter(new CurrencyListAdapter(ListCurrenciesActivity.this, currencies));
-		}
-	}
+        @Override
+        protected void onPostExecute(RatesList currencies) {
+            super.onPostExecute(currencies);
+            dialog.dismiss();
+            currencyListView.setAdapter(new CurrencyListAdapter(ListCurrenciesActivity.this, currencies));
+        }
+    }
 }
