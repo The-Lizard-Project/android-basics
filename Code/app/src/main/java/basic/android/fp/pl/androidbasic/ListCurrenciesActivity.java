@@ -1,8 +1,7 @@
 package basic.android.fp.pl.androidbasic;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -19,13 +18,18 @@ import basic.android.fp.pl.androidbasic.util.SharedPreferencesSupporter;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
-import retrofit.RestAdapter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ListCurrenciesActivity extends AppCompatActivity {
 
     @Bind(R.id.list)
     protected ListView currencyListView;
     private JsonRatesService service;
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +37,13 @@ public class ListCurrenciesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_change_currency);
         ButterKnife.bind(this);
 
-        RestAdapter restAdapter = new RestAdapter.Builder().
-                setEndpoint(getString(R.string.webservice_url) + ":" + getString(R.string.webservice_port)).
-                build();
+        dialog = new ProgressDialog(this);
+        dialog.setMessage(getString(R.string.please_wait));
+
+        Retrofit restAdapter = new Retrofit.Builder()
+                .baseUrl(getString(R.string.webservice_url) + ":" + getString(R.string.webservice_port))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
         service = restAdapter.create(JsonRatesService.class);
 
@@ -67,34 +75,20 @@ public class ListCurrenciesActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        new GetCurrencyTableTask(this).execute();
-    }
+        dialog.show();
 
-    private class GetCurrencyTableTask extends AsyncTask<Void, Void, RatesList> {
+        service.getCurrencyTable().enqueue(new Callback<RatesList>() {
+            @Override
+            public void onResponse(Call<RatesList> call, Response<RatesList> response) {
+                dialog.dismiss();
+                currencyListView.setAdapter(new CurrencyListAdapter(ListCurrenciesActivity.this, response.body()));
+            }
 
-        private final ProgressDialog dialog;
-
-        public GetCurrencyTableTask(Context context) {
-            dialog = new ProgressDialog(context);
-            dialog.setMessage(getString(R.string.please_wait));
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            dialog.show();
-        }
-
-        @Override
-        protected RatesList doInBackground(Void... param) {
-            return service.getCurrencyTable();
-        }
-
-        @Override
-        protected void onPostExecute(RatesList currencies) {
-            super.onPostExecute(currencies);
-            dialog.dismiss();
-            currencyListView.setAdapter(new CurrencyListAdapter(ListCurrenciesActivity.this, currencies));
-        }
+            @Override
+            public void onFailure(Call<RatesList> call, Throwable t) {
+                dialog.dismiss();
+                Toast.makeText(ListCurrenciesActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
