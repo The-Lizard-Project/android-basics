@@ -1,6 +1,6 @@
 MainActivity:
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,4 +42,4 @@ Do pliku strings.xml należy dodać dwa teksty:
 
 Zmieniamy styl aplikacji w styles.xml na:
 
-<style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar"> 
+<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"> 

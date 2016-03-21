@@ -8,23 +8,23 @@ activity_change_currency.xml:
 
 ListCurrenciesActivity:
 
-public class ListCurrenciesActivity extends Activity {
+public class ListCurrenciesActivity extends AppCompatActivity {
 
-	@InjectView(R.id.list)
+	@Bind(R.id.list)
 	protected ListView currencyListView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_change_currency);
-		ButterKnife.inject(this);
+		ButterKnife.bind(this);
 	}
 }
 
 
 Dodajemy do build.gradle w tagu dependencies:
 
-compile 'com.jakewharton:butterknife:+'
+compile 'com.jakewharton:butterknife:7.0.1'
 
 
 Dodajemy do MainActivity otwieranie nowej aktywności po naciśnięciu buttona.
@@ -195,13 +195,13 @@ Dodajemy klasę wewnętrzną.
 ViewHolder:
 
 protected class ViewHolder {
-	@InjectView(R.id.currencyName)
+	@Bind(R.id.currencyName)
 	TextView currencyName;
-	@InjectView(R.id.averageRate)
+	@Bind(R.id.averageRate)
 	TextView averageRate;
 
 	private ViewHolder(View rootView) {
-		ButterKnife.inject(this, rootView);
+		ButterKnife.bind(this, rootView);
 	}
 
 protected void populate(ExchangeRate exchangeRate) {

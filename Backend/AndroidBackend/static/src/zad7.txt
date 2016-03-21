@@ -1,6 +1,6 @@
 Do pliku build.gradle w tagu dependecsies dodajemy:
 
-compile 'com.squareup.picasso:picasso:+'
+compile 'com.squareup.picasso:picasso:2.5.2'
 
 
 Następnie dodajemy klasę pomocniczą dostarczającą adresy poszczególnych flag:
@@ -24,15 +24,15 @@ Do zasobów strings.xml dodajemy adres i port webserwisu:
 Uaktualniamy ViewHolder
 
 protected class ViewHolder {
-	@InjectView(R.id.currencyName)
+	@Bind(R.id.currencyName)
 	TextView currencyName;
-	@InjectView(R.id.averageRate)
+	@Bind(R.id.averageRate)
 	TextView averageRate;
-	@InjectView(R.id.flag)
+	@Bind(R.id.flag)
 	ImageView flag;
 
 	private ViewHolder(View rootView) {
-		ButterKnife.inject(this, rootView);
+		ButterKnife.bind(this, rootView);
 	}
 
 	protected void populate(ExchangeRate exchangeRate) {

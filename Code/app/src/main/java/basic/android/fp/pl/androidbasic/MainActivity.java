@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements RateChangeDialogF
         changeCurrencyDialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RateChangeDialogFragment.getInstance(currentExchangeRate).show(getFragmentManager(), "tag");
+                RateChangeDialogFragment.getInstance(currentExchangeRate).show(getSupportFragmentManager(), "tag");
             }
         });
 

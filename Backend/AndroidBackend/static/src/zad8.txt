@@ -1,6 +1,7 @@
 W Build gradle nalezy dodac linijke:
 
-compile 'com.squareup.retrofit:retrofit:+'
+compile 'com.squareup.retrofit2:retrofit:2.0.0'
+compile 'com.squareup.retrofit2:converter-gson:2.0.0'
 
 
 Tworzymy API które definiuje punkty dostępu do serwisu.
@@ -8,7 +9,7 @@ Tworzymy API które definiuje punkty dostępu do serwisu.
 public interface JsonRatesService {
 
 	@GET("/list/USD")
-	RatesList getCurrencyTable();
+	Call<RatesList> getCurrencyTable();
 }
 
 
@@ -16,14 +17,12 @@ W ListCurrenciesActivity w metodzie onCreate() konfigurujemy adapter serwisu.
 
 Bedzie tez trzeba dodac zasob tekstowy o nazwie webservice_url i wartosci http://83.230.72.199:8086
 
-RestAdapter restAdapter = new RestAdapter.Builder().
-	setEndpoint(getString(R.string.webservice_url) + ":" + getString(R.string.webservice_port)).
-	build();
+Retrofit restAdapter = new Retrofit.Builder()
+        .baseUrl(getString(R.string.webservice_url) + ":" + getString(R.string.webservice_port))
+        .addConverterFactory(GsonConverterFactory.create())
+        .build();
 
 service = restAdapter.create(JsonRatesService.class);
-
-
-Niejawnie używamy biblioteki GSON do parsowania JSON.
 
 
 Musimy jeszcze dodać pole:
@@ -36,53 +35,42 @@ Oraz nowy zasób tekstowy:
 <string name="webservice_port">8086</string>
 
 
-Pobieranie z internet wywoływane musi być na osobnym wątku, inaczej rzucony zostanie NetworkOnMainThreadException. Dlatego oddelegujemy wywołanie operacji sieciowej do osobnego wątku. Zdefiniujemy wewnętrzną klasę rozszerzającą AsyncTask.
+Pobieranie z Internetu wywoływane musi być na osobnym wątku, inaczej wyrzucony zostanie wyjątek NetworkOnMainThreadException. Dlatego użyjemy asynchronicznego wywołania Call’a.
 
-private class GetCurrencyTableTask extends AsyncTask<Void, Void, RatesList> {
+private void loadData() {
+    dialog.show();
 
-	private final ProgressDialog dialog;
+    service.getCurrencyTable().enqueue(new Callback<RatesList>() {
+        @Override
+        public void onResponse(Call<RatesList> call, Response<RatesList> response) {
+            dialog.dismiss();
+            currencyListView.setAdapter(new CurrencyListAdapter(ListCurrenciesActivity.this, response.body()));
+        }
 
-	public GetCurrencyTableTask(Context context) {
-		dialog = new ProgressDialog(context);
-		dialog.setMessage(getString(R.string.please_wait));
-	}
-
-	@Override
-	protected void onPreExecute() {
-		super.onPreExecute();
-		dialog.show();
-	}
-
-	@Override
-	protected RatesList doInBackground(Void... param) {
-		return service.getCurrencyTable();
-	}
-
-	@Override
-	protected void onPostExecute(RatesList currencies) {
-		super.onPostExecute(currencies);
-		dialog.dismiss();
-		currencyListView.setAdapter(new CurrencyListAdapter(ListCurrenciesActivity.this, currencies));
-	}
+        @Override
+        public void onFailure(Call<RatesList> call, Throwable t) {
+            dialog.dismiss();
+            Toast.makeText(ListCurrenciesActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+        }
+    });
 }
 
+Dodajemy pole w klasie:
+
+private AlertDialog dialog;
+
+W metodzie onCreate dodajemy:
+
+dialog = new ProgressDialog(this);
+dialog.setMessage(getString(R.string.please_wait));
 
 Dodajemy zasób tekstowy:
 
 <string name="please_wait">Proszę czekać</string>
 
-
-Dodajemy metodę:
-
-private void loadData() {
-	new GetCurrencyTableTask(this).execute();
-}
-
-
 Pozostaje w metodzie onCreate wywołać metodę loadData.
 
 loadData();
-
 
 Usuwamy dane testowe z metody onCreate:
 

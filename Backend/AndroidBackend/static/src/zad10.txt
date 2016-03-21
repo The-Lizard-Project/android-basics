@@ -1,4 +1,4 @@
-Dodajemy klasę definiującą dialog do edycji waluty:
+Dodajemy klasę definiującą dialog do edycji waluty. Importując klasę AlertDialog należy pamiętać, by użyć implementacji z biblioteki suportowej v7. DialogFragment użyjemy z support v4.
 
 public class RateChangeDialogFragment extends DialogFragment {
 
@@ -120,14 +120,14 @@ W MainActivity dodajemy obsługę klikania na drugi button:
 changeCurrencyDialogButton.setOnClickListener(new View.OnClickListener() {
 	@Override
 	public void onClick(View v) {
-	RateChangeDialogFragment.getInstance(currentExchangeRate).show(getFragmentManager(), "tag");	
+	RateChangeDialogFragment.getInstance(currentExchangeRate).show(getSupportFragmentManager(), "tag");	
 }
 });
 
 
 Oraz implementujemy interfejs OnCurrencychangedListener w MainActivity
 
-public class MainActivity extends Activity implements RateChangeDialogFragment.OnCurrencyChangedListener
+public class MainActivity extends AppCompatActivity implements RateChangeDialogFragment.OnCurrencyChangedListener
 
 @Override
 public void onRateChanged(ExchangeRate exchangeRate) {

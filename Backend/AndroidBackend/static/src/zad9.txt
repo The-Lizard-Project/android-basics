@@ -1,18 +1,20 @@
 By zdefiniować menu kontekstowe oraz akcje w ActionBarze, należy utworzyć nowy plik w folderze menu.
 change_currency.xml:
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_refresh"
         android:title="@string/action_refresh"
-        android:showAsAction="always"
+        app:showAsAction="always"
         android:icon="@drawable/ic_menu_refresh"/>
     <item
         android:id="@+id/menu_refresh"
         android:title="@string/action_refresh"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:icon="@drawable/ic_menu_refresh"/>
 </menu>
+
 
 
 Dodajemy zasób tekstowy:

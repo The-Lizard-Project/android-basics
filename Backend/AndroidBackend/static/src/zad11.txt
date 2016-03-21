@@ -1,12 +1,12 @@
 Tworzymy nowe activity:
 
-public class ExchangeActivity extends Activity {
+public class ExchangeActivity extends AppCompatActivity {
 
 	public static final String CURRENCY_BUNDLE_KEY = "CURRENCY_BUNDLE_KEY";
 
-	@InjectView(R.id.newCurrency)
+	@Bind(R.id.newCurrency)
 	protected TextView newCurrencyTextView;
-	@InjectView(R.id.currency)
+	@Bind(R.id.currency)
 	protected TextView currencyTextView;
 
 	private ExchangeRate exchangeRate;
@@ -15,7 +15,7 @@ public class ExchangeActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_exchange);
-		ButterKnife.inject(this);
+		ButterKnife.bind(this);
 
 		exchangeRate = (ExchangeRate) getIntent().getSerializableExtra(CURRENCY_BUNDLE_KEY);
 		currencyTextView.setText("Aktualny kurs to:\t" + exchangeRate.getRate());
