@@ -47,6 +47,6 @@ W metodzie populate dodajemy pobranie obrazków za pomocą Picasso:
 Picasso.with(context).load(FlagAddressBuilder.obtainAddress(context, exchangeRate)).placeholder(R.drawable.money).into(flag);
 
 
-By móc komunikować się z internetem należy nadać aplikacji pozwolenie w manifeście.
+By móc komunikować się z internetem należy nadać aplikacji pozwolenie w manifeście. Pozwolenia muszą być zadeklarowane poza tagiem application, najlepiej ponad nim.
 
 <uses-permission android:name="android.permission.INTERNET" />
